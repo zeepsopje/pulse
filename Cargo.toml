@@ -7,4 +7,6 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4.31"
+clap = { version = "4.4.11", features = ["derive"] }
 thiserror = "1.0.50"
+uuid = { version = "1.6.1", features = ["v4", "fast-rng"] }

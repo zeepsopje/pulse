@@ -1,3 +1,4 @@
+use uuid::Uuid;
 use chrono::{
     prelude::*,
     Duration,
@@ -26,12 +27,8 @@ pub enum Status {
 }
 
 #[derive(Debug)]
-pub struct Project {
-    pub timers: Vec<Timer>,
-}
-
-#[derive(Debug)]
 pub struct Timer {
+    pub id: Uuid,
     pub name: String,
     pub start_time: Option<DateTime<Utc>>,
     pub end_time: Option<DateTime<Utc>>,
@@ -40,6 +37,7 @@ pub struct Timer {
 impl Timer {
     pub fn new(name: &str) -> Self {
         Self {
+            id: Uuid::new_v4(),
             name: name.into(),
             start_time: None,
             end_time: None
