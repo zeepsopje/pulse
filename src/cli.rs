@@ -16,7 +16,14 @@ pub enum Command {
     Use { name: String },
 
     /// Track time in the project currently being focussed on.
-    Track { task: String },
+    Track {
+        /// The name of the task to track.
+        task: String,
+
+        /// Additional notes describing the activity.
+        #[arg(short, long)]
+        notes: Option<String>,
+    },
 
     /// Manage tasks.
     Task(TaskArgs),
