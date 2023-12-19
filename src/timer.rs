@@ -3,6 +3,7 @@ use chrono::{
     prelude::*,
     Duration,
 };
+use serde::{Serialize, Deserialize};
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
@@ -26,21 +27,28 @@ pub enum Status {
     Invalid,
 }
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize)]
+pub struct TimerOptions {
+    pub notes: String,
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct Timer {
     pub id: Uuid,
-    pub name: String,
+    pub task: String,
     pub start_time: Option<DateTime<Utc>>,
     pub end_time: Option<DateTime<Utc>>,
+    pub notes: Option<String>,
 }
 
 impl Timer {
-    pub fn new(name: &str) -> Self {
+    pub fn new(task: &str) -> Self {
         Self {
             id: Uuid::new_v4(),
-            name: name.into(),
+            task: task.into(),
             start_time: None,
-            end_time: None
+            end_time: None,
+            notes: None,
         }
     }
 
@@ -95,13 +103,13 @@ mod test {
 
     #[test]
     fn start() {
-        let mut timer = Timer::new("test");
+        let mut timer = Timer::new("dev");
         assert!(timer.start().is_ok());
     }
 
     #[test]
     fn stop() {
-        let mut timer = Timer::new("test");
+        let mut timer = Timer::new("dev");
         assert!(matches!(timer.stop(), Err(Error::NotStartedYet)));
         assert!(timer.start().is_ok());
         assert!(timer.stop().is_ok());
@@ -109,7 +117,7 @@ mod test {
 
     #[test]
     fn elapsed() {
-        let mut timer = Timer::new("test");
+        let mut timer = Timer::new("dev");
         assert!(timer.elapsed().is_err());
         timer.start().unwrap();
         std::thread::sleep(Duration::seconds(5).to_std().unwrap());
